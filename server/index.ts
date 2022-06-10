@@ -6,6 +6,7 @@ const app = new Koa()
 const router = createRouter()
 
 router.get('/get/:name/sub/:number', async (ctx, next) => {
+
   const r = await new Promise<string>((res) => {
     setTimeout(() => res('hi'), 1000)
   })

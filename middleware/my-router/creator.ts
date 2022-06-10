@@ -3,6 +3,7 @@ import type {
   Method,
   CreatorOption,
   RouterMiddleware,
+  VerbRouteFn,
 } from './shared/types'
 import type { Middleware } from 'koa'
 import { match } from './shared/utils'
@@ -23,7 +24,7 @@ export function createRouter(option?: CreatorOption) {
     // handle del as delete
     if (verb === 'del') verb = 'delete'
 
-    return function (path: string, ...middlewares: RouterMiddleware[]) {
+    const verbRoute: VerbRouteFn = (path, ...middlewares) => {
       const pathMap = routeMap.get(verb) || new Map()
       const pathHanlders = pathMap.get(`${prefix}/path`) || []
       pathHanlders.push(...middlewares)
@@ -31,6 +32,8 @@ export function createRouter(option?: CreatorOption) {
       pathMap.set(path, middlewares)
       routeMap.set(verb, pathMap)
     }
+
+    return verbRoute
   }
 
   const methods: Method[] = ['get', 'post', 'put', 'delete', 'patch', 'del']
@@ -38,12 +41,11 @@ export function createRouter(option?: CreatorOption) {
     router[method] = createMethodRoute(method)
   })
 
-  function allFn(path: string, ...middlewares: RouterMiddleware[]) {
+  router.all = (path, ...middlewares) => {
     methods.forEach(method => createMethodRoute(method)(path, ...middlewares))
   }
-  router.all = allFn
 
-  function routes(): RouterMiddleware {
+  function routes(): Middleware {
     return async (ctx, next) => {
       let { path, method } = ctx
       method = method.toLowerCase()

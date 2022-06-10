@@ -1,4 +1,5 @@
 import { type Middleware } from "koa"
+import { RouterParams } from "./paramTypes"
 
 
 export interface CreatorOption {
@@ -10,7 +11,7 @@ export interface CreatorOption {
 
 export type Method = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'del'
 
-export type VerbRouteFn = (path: string, ...middlewares: RouterMiddleware[]) => void
+export type VerbRouteFn = <Path extends string>(path: Path, ...middlewares: RouterMiddleware<Path>[]) => any
 
 export type VerbRouteFns = {
   [M in Method]: VerbRouteFn
@@ -18,7 +19,7 @@ export type VerbRouteFns = {
 
 export type Router = {
   all: VerbRouteFn
-  routes: () => RouterMiddleware
+  routes: () => RouterMiddleware<any>
 } & VerbRouteFns
 
 /**
@@ -27,7 +28,5 @@ export type Router = {
 export type AddTypeToFirstParam<F extends (p1: any, ...last: any[]) => any, T> =
   F extends (p1: infer P1, ...last: (infer U)[]) => any ? (p1: P1 & T, ...last: U[]) => any : never
 
-export type RouterMiddleware = AddTypeToFirstParam<Middleware, {
-  params: any
-}>
+export type RouterMiddleware<Path extends string> = AddTypeToFirstParam<Middleware, RouterParams<Path>>
 
