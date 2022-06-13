@@ -1,7 +1,6 @@
 import { type Middleware } from "koa"
 import { RouterParams } from "./paramTypes"
 
-
 export interface CreatorOption {
   /**
    * prefix of all routes' path
@@ -13,14 +12,12 @@ export type Method = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'del'
 
 export type VerbRouteFn = <Path extends string>(path: Path, ...middlewares: RouterMiddleware<Path>[]) => any
 
-export type VerbRouteFns = {
-  [M in Method]: VerbRouteFn
-}
-
 export type Router = {
   all: VerbRouteFn
-  routes: () => RouterMiddleware<any>
-} & VerbRouteFns
+  routes: () => Middleware
+} & {
+    [M in Method]: VerbRouteFn
+  }
 
 /**
  * It looks a little weird but useful 🤣

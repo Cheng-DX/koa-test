@@ -2,7 +2,6 @@ import type {
   Router,
   Method,
   CreatorOption,
-  RouterMiddleware,
   VerbRouteFn,
 } from './shared/types'
 import type { Middleware } from 'koa'

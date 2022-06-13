@@ -5,8 +5,8 @@ import { createRouter } from '../middleware/my-router'
 const app = new Koa()
 const router = createRouter()
 
-router.get('/get/:name/sub/:number', async (ctx, next) => {
-
+router.get('/get/:number/sub/[name]', async (ctx, next) => {
+  const { name, number } = ctx.params
   const r = await new Promise<string>((res) => {
     setTimeout(() => res('hi'), 1000)
   })
