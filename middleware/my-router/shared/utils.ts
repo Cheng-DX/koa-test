@@ -23,6 +23,14 @@ export function match(path: string, storedPath: string) {
     if (storedPath.startsWith(':')) {
       params[storedPath.slice(1)] = path
       continue
+    } else if (storedPath.startsWith('[') && storedPath.endsWith(']')) {
+      const number = Number(path)
+      if (isNaN(number)) {
+        throw new Error(`${path} is not a number`)
+      } else {
+        params[storedPath.slice(1, -1)] = number
+        continue
+      }
     } else {
       if (path !== storedPath) {
         return {
@@ -32,12 +40,9 @@ export function match(path: string, storedPath: string) {
       }
     }
   }
-  type Params = {
-    [K in keyof typeof params]: string
-  }
   return {
     isMatched: true,
-    params: params as Params
+    params
   }
 }
 

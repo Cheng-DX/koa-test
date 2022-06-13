@@ -8,7 +8,7 @@ type FilteredParts<Path extends string> = Path extends `${infer A}/${infer B}`
 
 type MapToObject<T> = {
   [Key in T as Key extends `:${infer U}` ? U : Key extends `[${infer U}]` ? U : never] : 
-  Key extends `:${infer _ANY}` ? number : Key extends `[${infer _ANY}]` ? string : never;
+  Key extends `:${infer _ANY}` ? string : Key extends `[${infer _ANY}]` ? number : never;
 }
 
 export type RouterParams<Path extends string> = {
