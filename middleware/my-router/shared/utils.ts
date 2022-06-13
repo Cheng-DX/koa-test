@@ -1,8 +1,3 @@
-
-export function isMatched(path: string, storedPath: string) {
-  return path === storedPath
-}
-
 export function match(path: string, storedPath: string) {
   path = removeFirstSlash(path)
   storedPath = removeFirstSlash(storedPath)
