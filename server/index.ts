@@ -16,6 +16,15 @@ router.get('/get/:number/sub/[name]', async (ctx, next) => {
   next()
 })
 
+const subRouter = createRouter()
+subRouter.get('/post/[times]', async (ctx, next) => {
+  const { params : { times } } = ctx
+  ctx.body = `${times} times`
+})
+
+router.use('/test',subRouter)
+console.log(router.getRouteMap())
+
 app
   .use(logger)
   .use(router.routes())

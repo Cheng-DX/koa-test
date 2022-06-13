@@ -15,6 +15,8 @@ export type VerbRouteFn = <Path extends string>(path: Path, ...middlewares: Rout
 export type Router = {
   all: VerbRouteFn
   routes: () => Middleware
+  use: (basePath: string,...routers: Router[]) => void
+  getRouteMap: () => Map<string, Map<string, Middleware[]>>
 } & {
     [M in Method]: VerbRouteFn
   }

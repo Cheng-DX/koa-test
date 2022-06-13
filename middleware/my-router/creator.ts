@@ -44,7 +44,7 @@ export function createRouter(option?: CreatorOption) {
     methods.forEach(method => createMethodRoute(method)(path, ...middlewares))
   }
 
-  function routes(): Middleware {
+  router.routes = () => {
     return async (ctx, next) => {
       let { path, method } = ctx
       method = method.toLowerCase()
@@ -64,6 +64,23 @@ export function createRouter(option?: CreatorOption) {
       }
     }
   }
-  router.routes = routes
+  
+  router.getRouteMap = () => routeMap
+  
+  router.use = (basePath,...routers) => {
+    routers.forEach(subRouter => {
+      const subRouteMap = subRouter.getRouteMap()
+      for (const [verb, pathMap] of subRouteMap.entries()) {
+        const basePathMap = routeMap.get(verb) || new Map()
+        for (const [path, handlers] of pathMap.entries()) {
+          const finalPath = `${basePath}${path}`
+          const baseHandlers = basePathMap.get(finalPath) || []
+          basePathMap.set(finalPath, [...baseHandlers, ...handlers])
+        }
+        routeMap.set(verb, basePathMap)
+      }
+    })
+  }
+
   return router
 }
