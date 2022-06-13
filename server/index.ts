@@ -17,7 +17,7 @@ router.get('/get/:number/sub/[name]', async (ctx, next) => {
 })
 
 const subRouter = createRouter()
-subRouter.get('/post/[times]', async (ctx, next) => {
+subRouter.post('/post/[times]', async (ctx, next) => {
   const { params : { times } } = ctx
   ctx.body = `${times} times`
 })

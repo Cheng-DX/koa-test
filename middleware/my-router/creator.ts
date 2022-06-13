@@ -5,16 +5,14 @@ import type {
   VerbRouteFn,
 } from './shared/types'
 import type { Middleware } from 'koa'
-import { match } from './shared/utils'
+import { match, removeLastSlash } from './shared/utils'
 
 export function createRouter(option?: CreatorOption) {
   // TODO need a better way to handle optional prefix
   let prefix: string = ''
-  if (option)
-    ({ prefix = '' } = option)
+  if (option) ({ prefix = '' } = option)
 
-  // remove the last '/'
-  prefix.replace(/\/$/, '')
+  prefix = removeLastSlash(prefix)
 
   const router = {} as Router
   const routeMap = new Map<string, Map<string, Middleware[]>>()
@@ -31,7 +29,6 @@ export function createRouter(option?: CreatorOption) {
       pathMap.set(path, middlewares)
       routeMap.set(verb, pathMap)
     }
-
     return verbRoute
   }
 
@@ -48,12 +45,11 @@ export function createRouter(option?: CreatorOption) {
     return async (ctx, next) => {
       let { path, method } = ctx
       method = method.toLowerCase()
-
+      
       const pathMap = routeMap.get(method)
       if (!pathMap) return next()
-      for (const entry of pathMap.entries()) {
-        const [storedPath, handlers] = entry
 
+      for (const [storedPath, handlers] of pathMap.entries()) {
         const { isMatched, params } = match(path, storedPath)
         if (isMatched) {
           ctx.params = params
