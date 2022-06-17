@@ -8,10 +8,7 @@ import type { Middleware } from 'koa'
 import { match, removeLastSlash } from './shared/utils'
 
 export function createRouter(option?: CreatorOption) {
-  // TODO need a better way to handle optional prefix
-  let prefix: string = ''
-  if (option) ({ prefix = '' } = option)
-
+  let prefix = option?.prefix || ''
   prefix = removeLastSlash(prefix)
 
   const router = {} as Router

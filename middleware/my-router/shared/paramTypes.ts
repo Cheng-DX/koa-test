@@ -7,7 +7,7 @@ type FilteredParts<Path extends string> = Path extends `${infer A}/${infer B}`
   : IsParameter<Path>
 
 type MapToObject<T> = {
-  [Key in T as Key extends `:${infer U}` ? U : Key extends `[${infer U}]` ? U : never] : 
+  [Key in T as Key extends `:${infer U}` ? U : Key extends `[${infer U}]` ? U : never]:
   Key extends `:${infer _ANY}` ? string : Key extends `[${infer _ANY}]` ? number : never;
 }
 

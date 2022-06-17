@@ -5,7 +5,7 @@ export interface CreatorOption {
   /**
    * prefix of all routes' path
    */
-  prefix?: string
+  prefix: string
 }
 
 export type Method = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'del'

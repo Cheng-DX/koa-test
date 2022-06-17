@@ -12,7 +12,6 @@ export function match(path: string, storedPath: string) {
   const len = splitPathes.length
   const params: any = {}
   for (let i = 0; i < len; i++) {
-    // TODO 丑陋
     const storedPath = splitStroedPathes[i]
     const path = splitPathes[i]
     if (storedPath.startsWith(':')) {
